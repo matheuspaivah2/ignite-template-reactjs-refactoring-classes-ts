@@ -3,14 +3,21 @@ import {
   useRef,
   useState,
   useCallback,
-} from 'react';
+  InputHTMLAttributes,
+} from "react";
 
-import { useField } from '@unform/core';
+import { useField } from "@unform/core";
 
-import { Container } from './styles';
+import { Container } from "./styles";
+import { IconBaseProps } from "react-icons/lib";
 
-const Input = ({ name, icon: Icon, ...rest }) => {
-  const inputRef = useRef(null);
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  name: string;
+  icon?: React.ComponentType<IconBaseProps>;
+}
+
+const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
+  const [inputRef] = useState(useRef(null));
 
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
@@ -24,15 +31,18 @@ const Input = ({ name, icon: Icon, ...rest }) => {
   const handleInputBlur = useCallback(() => {
     setIsFocused(false);
 
-    setIsFilled(!!inputRef.current?.value);
+    // setIsFilled(!!inputRef.current?.value);
+    setIsFilled(!!inputRef.current);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     registerField({
       name: fieldName,
       ref: inputRef.current,
-      path: 'value',
+      path: "value",
     });
+    // eslint-disable-next-line
   }, [fieldName, registerField]);
 
   return (
